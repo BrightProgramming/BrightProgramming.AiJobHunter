@@ -1,0 +1,14 @@
+# Build output
+**/bin/
+**/obj/
+.vs/
+.idea/
+
+# Local tooling and secrets
+.dotnet-home/
+.env
+*.user
+*.suo
+
+# Test output
+TestResults/

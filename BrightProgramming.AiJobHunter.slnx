@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="BrightProgramming.AiJobHunter.Api/BrightProgramming.AiJobHunter.Api.csproj" />
+  <Project Path="BrightProgramming.AiJobHunter.IntegrationTests/BrightProgramming.AiJobHunter.IntegrationTests.csproj" />
+  <Project Path="BrightProgramming.AiJobHunter.UnitTests/BrightProgramming.AiJobHunter.UnitTests.csproj" />
+  <Project Path="BrightProgramming.AiJobHunter.Web/BrightProgramming.AiJobHunter.Web.csproj" />
+</Solution>
