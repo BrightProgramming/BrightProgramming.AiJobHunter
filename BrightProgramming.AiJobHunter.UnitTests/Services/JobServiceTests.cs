@@ -42,4 +42,32 @@ public sealed class JobServiceTests
         Assert.NotNull(savedJob);
         Assert.Equal(savedJob!.Id, savedJobId);
     }
+
+    [Fact]
+    public async Task GetAllAsyncReturnsMappedJobsFromRepository()
+    {
+        var repository = new Mock<IJobRepository>();
+        var repositoryJob = new RepositoryJob
+        {
+            Id = Guid.NewGuid(),
+            Title = "Platform Engineer",
+            Company = "Example Co",
+            Url = "https://example.com/jobs/123"
+        };
+        repository
+            .Setup(mock => mock.GetAllAsync(It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new[] { repositoryJob });
+
+        var service = new JobService(repository.Object, new JobMapper());
+        using var cancellationTokenSource = new CancellationTokenSource();
+
+        var jobs = await service.GetAllAsync(cancellationTokenSource.Token);
+
+        repository.Verify(mock => mock.GetAllAsync(cancellationTokenSource.Token), Times.Once);
+        var job = Assert.Single(jobs);
+        Assert.Equal(repositoryJob.Id, job.Id);
+        Assert.Equal(repositoryJob.Title, job.Title);
+        Assert.Equal(repositoryJob.Company, job.Company);
+        Assert.Equal(repositoryJob.Url, job.Url);
+    }
 }

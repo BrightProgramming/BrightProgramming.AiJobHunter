@@ -3,6 +3,7 @@ using BrightProgramming.AiJobHunter.Api.Mappings;
 using BrightProgramming.AiJobHunter.Api.Services;
 using BrightProgramming.AiJobHunter.Api.Validations;
 using Microsoft.AspNetCore.Mvc;
+using CommonJob = BrightProgramming.AiJobHunter.Api.Models.Job;
 
 namespace BrightProgramming.AiJobHunter.Api.Controllers;
 
@@ -13,6 +14,13 @@ public sealed class JobsController(
     JobMapper jobMapper,
     CreateJobRequestValidator validator) : ControllerBase
 {
+    [HttpGet]
+    public async Task<ActionResult<IReadOnlyList<CommonJob>>> GetAll(CancellationToken cancellationToken)
+    {
+        var jobs = await jobService.GetAllAsync(cancellationToken);
+        return Ok(jobs);
+    }
+
     [HttpPost]
     public async Task<IActionResult> Create(
         [FromBody] CreateJobRequest request,

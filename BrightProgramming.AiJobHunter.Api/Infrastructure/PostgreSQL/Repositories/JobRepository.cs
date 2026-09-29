@@ -30,4 +30,27 @@ public sealed class JobRepository : IJobRepository
 
         await command.ExecuteNonQueryAsync(cancellationToken);
     }
+
+    public async Task<IReadOnlyList<Job>> GetAllAsync(CancellationToken cancellationToken)
+    {
+        const string sql = "SELECT id, title, company, url FROM jobs;";
+
+        await using var connection = await _databaseContext.OpenConnectionAsync(cancellationToken);
+        await using var command = new NpgsqlCommand(sql, connection);
+        await using var reader = await command.ExecuteReaderAsync(cancellationToken);
+
+        var jobs = new List<Job>();
+        while (await reader.ReadAsync(cancellationToken))
+        {
+            jobs.Add(new Job
+            {
+                Id = reader.GetGuid(0),
+                Title = reader.GetString(1),
+                Company = reader.GetString(2),
+                Url = reader.GetString(3)
+            });
+        }
+
+        return jobs;
+    }
 }

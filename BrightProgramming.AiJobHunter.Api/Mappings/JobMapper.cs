@@ -18,12 +18,26 @@ public sealed class JobMapper
         };
     }
 
+    public JobHunterJob ToCommonJob(PostgreSqlJob job)
+    {
+        ArgumentNullException.ThrowIfNull(job);
+
+        return new JobHunterJob
+        {
+            Id = job.Id,
+            Title = job.Title,
+            Company = job.Company,
+            Url = job.Url
+        };
+    }
+
     public PostgreSqlJob ToRepositoryJob(JobHunterJob job)
     {
         ArgumentNullException.ThrowIfNull(job);
 
         return new PostgreSqlJob
         {
+            Id = job.Id,
             Title = job.Title,
             Company = job.Company,
             Url = job.Url

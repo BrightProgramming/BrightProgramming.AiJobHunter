@@ -5,4 +5,6 @@ namespace BrightProgramming.AiJobHunter.Api.Infrastructure.PostgreSQL.Repositori
 public interface IJobRepository
 {
     Task SaveAsync(Job job, CancellationToken cancellationToken);
+
+    Task<IReadOnlyList<Job>> GetAllAsync(CancellationToken cancellationToken);
 }

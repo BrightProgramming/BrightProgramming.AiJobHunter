@@ -12,6 +12,30 @@ namespace BrightProgramming.AiJobHunter.UnitTests.Controllers;
 public sealed class JobsControllerTests
 {
     [Fact]
+    public async Task GetAllReturnsJobsFromService()
+    {
+        var service = new Mock<IJobService>();
+        var job = new CommonJob
+        {
+            Id = Guid.NewGuid(),
+            Title = "Platform Engineer",
+            Company = "Example Co",
+            Url = "https://example.com/jobs/123"
+        };
+        using var cancellationTokenSource = new CancellationTokenSource();
+        service.Setup(mock => mock.GetAllAsync(cancellationTokenSource.Token))
+            .ReturnsAsync(new[] { job });
+        var controller = CreateController(service.Object);
+
+        var result = await controller.GetAll(cancellationTokenSource.Token);
+
+        service.Verify(mock => mock.GetAllAsync(cancellationTokenSource.Token), Times.Once);
+        var okResult = Assert.IsType<OkObjectResult>(result.Result);
+        Assert.Equal(200, okResult.StatusCode);
+        Assert.Same(job, Assert.IsAssignableFrom<IReadOnlyList<CommonJob>>(okResult.Value).Single());
+    }
+
+    [Fact]
     public async Task CreateValidRequestCallsServiceWithMappedJob()
     {
         var service = new Mock<IJobService>();

@@ -16,4 +16,13 @@ public sealed class JobService(IJobRepository jobRepository, JobMapper jobMapper
 
         return repositoryJob.Id;
     }
+
+    public async Task<IReadOnlyList<JobHunterJob>> GetAllAsync(CancellationToken cancellationToken)
+    {
+        var repositoryJobs = await jobRepository.GetAllAsync(cancellationToken);
+
+        return repositoryJobs
+            .Select(jobMapper.ToCommonJob)
+            .ToArray();
+    }
 }
